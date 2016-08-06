@@ -221,7 +221,7 @@ for ARCH in $ARCHES; do
         echo building binutils
         mkdir -p $BINBUILDPATH
         pushd $BINBUILDPATH
-        log ../binutils-$BINVER/configure --target=$TARGET --prefix=$INSTALLPATH --disable-werror --enable-initfini-array
+        log ../binutils-$BINVER/configure --target=$TARGET --prefix=$INSTALLPATH --disable-werror --enable-initfini-array --enable-gold
         log $MAKE $PARALLEL
         log $MAKE install
         touch built.txt

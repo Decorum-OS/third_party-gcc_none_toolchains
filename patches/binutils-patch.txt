@@ -31,3 +31,45 @@ index 672b208..f581c68 100644
  
  ARCH=arm
  MACHINE=
+
+
+gold/
+2016-08-06  Roland McGrath  <roland@hack.frob.com>
+
+	* yyscript.y (HIDDEN): New %token.
+	(assignment): Handle HIDDEN(string = expr) syntax.
+	* script.cc (script_keyword_parsecodes): Add HIDDEN.
+
+diff --git a/gold/script.cc b/gold/script.cc
+index d6aa7b2..bb8b437 100644
+--- a/gold/script.cc
++++ b/gold/script.cc
+@@ -1755,6 +1755,7 @@ script_keyword_parsecodes[] =
+   { "FLOAT", FLOAT },
+   { "FORCE_COMMON_ALLOCATION", FORCE_COMMON_ALLOCATION },
+   { "GROUP", GROUP },
++  { "HIDDEN", HIDDEN },
+   { "HLL", HLL },
+   { "INCLUDE", INCLUDE },
+   { "INFO", INFO },
+diff --git a/gold/yyscript.y b/gold/yyscript.y
+index 7e6bd27..38831d5 100644
+--- a/gold/yyscript.y
++++ b/gold/yyscript.y
+@@ -137,6 +137,7 @@
+ %token FORCE_COMMON_ALLOCATION
+ %token GLOBAL		/* global */
+ %token GROUP
++%token HIDDEN
+ %token HLL
+ %token INCLUDE
+ %token INHIBIT_COMMON_ALLOCATION
+@@ -864,6 +865,8 @@ assignment:
+ 	      Expression_ptr e = script_exp_binary_bitwise_or(s, $3);
+ 	      script_set_symbol(closure, $1.value, $1.length, e, 0, 0);
+ 	    }
++	| HIDDEN '(' string '=' parse_exp ')'
++	    { script_set_symbol(closure, $3.value, $3.length, $5, 0, 1); }
+ 	| PROVIDE '(' string '=' parse_exp ')'
+ 	    { script_set_symbol(closure, $3.value, $3.length, $5, 1, 0); }
+ 	| PROVIDE_HIDDEN '(' string '=' parse_exp ')'
