@@ -92,13 +92,8 @@ if [ "$OS" = "Linux" ]; then
     PARALLEL=-j`expr $COUNT + $COUNT`
 fi
 if [ "$OS" = "Darwin" ]; then
-    export CPPFLAGS=-I/opt/local/include
-    export LDFLAGS=-L/opt/local/lib
+    # needed to work around problem with clang compiler and some generated code in gcc
     export CXXFLAGS="-fbracket-depth=1024"
-fi
-if [ "$OS" = "FreeBSD" ]; then
-    export CPPFLAGS=-I/usr/local/include
-    export LDFLAGS=-L/usr/local/lib
 fi
 MAKE=make
 if [ "$OS" = "FreeBSD" ]; then
