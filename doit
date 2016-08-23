@@ -202,6 +202,8 @@ ln -sf ../mpc-$MPCVER mpc
 ln -sf ../mpfr-$MPFRVER mpfr
 popd
 
+COMMON_CONFIG=--with-included-gettext
+
 for ARCH in $ARCHES; do
     echo building for arch \"$ARCH\"
     if [ "$ARCH" == "arm" ]; then
@@ -221,7 +223,7 @@ for ARCH in $ARCHES; do
         echo building binutils
         mkdir -p $BINBUILDPATH
         pushd $BINBUILDPATH
-        log ../binutils-$BINVER/configure --target=$TARGET --prefix=$INSTALLPATH --disable-werror --enable-initfini-array --enable-gold
+        log ../binutils-$BINVER/configure $COMMON_CONFIG --target=$TARGET --prefix=$INSTALLPATH --disable-werror --enable-initfini-array --enable-gold
         log $MAKE $PARALLEL
         log $MAKE install
         touch built.txt
@@ -238,7 +240,7 @@ for ARCH in $ARCHES; do
 
         mkdir -p $GCCBUILDPATH
         pushd $GCCBUILDPATH
-        log ../gcc-$GCCVER/configure --target=$TARGET --prefix=$INSTALLPATH --enable-languages=c,c++ $ARCH_OPTIONS --disable-werror
+        log ../gcc-$GCCVER/configure $COMMON_CONFIG --target=$TARGET --prefix=$INSTALLPATH --enable-languages=c,c++ $ARCH_OPTIONS --disable-werror
         log $MAKE all-gcc $PARALLEL
         log $MAKE all-target-libgcc $PARALLEL
         log $MAKE install-gcc
@@ -256,7 +258,7 @@ for ARCH in $ARCHES; do
         echo building gdb
         mkdir -p $GDBBUILDPATH
         pushd $GDBBUILDPATH
-        log ../gdb-$GDBVER/configure --target=$TARGET --prefix=$INSTALLPATH --disable-werror $EXTRA_TARGETS
+        log ../gdb-$GDBVER/configure $COMMON_CONFIG --target=$TARGET --prefix=$INSTALLPATH --disable-werror $EXTRA_TARGETS
         log make $PARALLEL
         log make install
         touch built.txt
